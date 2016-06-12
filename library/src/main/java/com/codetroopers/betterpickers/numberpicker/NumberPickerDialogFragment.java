@@ -221,7 +221,7 @@ public class NumberPickerDialogFragment extends DialogFragment {
                     final NumberPickerDialogHandlerV2 frag = (NumberPickerDialogHandlerV2) fragment;
                     frag.onDialogNumberSet(mReference, mPicker.getNumber(), mPicker.getDecimal(), mPicker.getIsNegative(), number);
                 }
-                dismiss();
+                dismissAllowingStateLoss();
             }
         });
 
