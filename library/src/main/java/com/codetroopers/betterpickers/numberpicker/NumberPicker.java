@@ -584,7 +584,7 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
     }
 
     private void readAndRightDigits(String digitsToRead) {
-        for (int i = digitsToRead.length() - 1; i >= 0; i--) {
+        for (int i = Math.min(digitsToRead.length() - 1, mInputSize); i >= 0; i--) {
             mInputPointer++;
             mInput[mInputPointer] = digitsToRead.charAt(i) - '0';
         }
