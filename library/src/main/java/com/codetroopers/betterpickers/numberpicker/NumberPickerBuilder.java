@@ -245,6 +245,7 @@ public class NumberPickerBuilder {
         }
         fragment.setNumberPickerDialogHandlers(mNumberPickerDialogHandlers);
         fragment.setNumberPickerDialogHandlersV2(mNumberPickerDialogHandlersV2);
-        fragment.show(ft, "number_dialog");
+        ft.add(fragment,"number_dialog");
+        ft.commitAllowingStateLoss();
     }
 }
