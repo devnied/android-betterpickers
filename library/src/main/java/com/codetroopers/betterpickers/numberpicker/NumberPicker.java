@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 public class NumberPicker extends LinearLayout implements Button.OnClickListener,
         Button.OnLongClickListener {
 
-    protected int mInputSize = 20;
+    protected int mInputSize = 25;
     protected final Button mNumbers[] = new Button[10];
     protected int mInput[] = new int[mInputSize];
     protected int mInputPointer = -1;
@@ -35,7 +35,6 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
     protected final Context mContext;
 
     private TextView mLabel;
-    private NumberPickerErrorTextView mError;
     private int mSign;
     private String mLabelText = "";
     private Button mSetButton;
@@ -144,7 +143,6 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
         super.onFinishInflate();
 
         mDivider = findViewById(R.id.divider);
-        mError = (NumberPickerErrorTextView) findViewById(R.id.error);
 
         for (int i = 0; i < mInput.length; i++) {
             mInput[i] = -1;
@@ -248,19 +246,9 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
         }
     }
 
-    /**
-     * Expose the NumberView in order to set errors
-     *
-     * @return the NumberView
-     */
-    public NumberPickerErrorTextView getErrorView() {
-        return mError;
-    }
-
     @Override
     public void onClick(View v) {
         v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
-        mError.hideImmediately();
         doOnClick(v);
         updateDeleteButton();
     }
@@ -289,7 +277,6 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
     @Override
     public boolean onLongClick(View v) {
         v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-        mError.hideImmediately();
         if (v == mDelete) {
             mDelete.setPressed(false);
             reset();
@@ -566,11 +553,15 @@ public class NumberPicker extends LinearLayout implements Button.OnClickListener
             mSign = SIGN_POSITIVE;
         }
 
-        if (decimalPart != null) {
+        if (decimalPart != null && !decimalPart.equals(BigDecimal.ZERO)) {
             String decimalString = decimalPart.toPlainString();
             // remove "0." from the string
             if (decimalString.length() > 2){
                 decimalString = TextUtils.substring(decimalString, 2, decimalString.length());
+            }
+            int size = String.valueOf(integerPart).length() + decimalString.length();
+            if (size > mInputSize){
+                decimalString = decimalString.substring(0, decimalString.length() - (size-mInputSize) - 1);
             }
             readAndRightDigits(decimalString);
             mInputPointer++;

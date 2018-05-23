@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment.NumberPickerDialogHandler;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment.NumberPickerDialogHandlerV2;
 
 import java.math.BigDecimal;
@@ -26,8 +25,6 @@ public class NumberPickerBuilder {
     private Integer decimalVisibility;
     private String labelText;
     private int mReference;
-    @Deprecated
-    private Vector<NumberPickerDialogHandler> mNumberPickerDialogHandlers = new Vector<NumberPickerDialogHandler>();
     private Vector<NumberPickerDialogHandlerV2> mNumberPickerDialogHandlersV2 = new Vector<>();
     private BigInteger currentNumberValue;
     private BigDecimal currentDecimalValue;
@@ -76,15 +73,6 @@ public class NumberPickerBuilder {
     public NumberPickerBuilder setReference(int reference) {
         this.mReference = reference;
         return this;
-    }
-
-    /**
-     * Set initial value to display
-     * @deprecated use etCurrentNumber(BigInteger number)
-     */
-    @Deprecated
-    public NumberPickerBuilder setCurrentNumber(Integer number) {
-        return setCurrentNumber(BigInteger.valueOf(number));
     }
 
     /**
@@ -184,35 +172,8 @@ public class NumberPickerBuilder {
         return this;
     }
 
-
-    /**
-     * Attach universal objects as additional handlers for notification when the Picker is set. For most use cases, this
-     * method is not necessary as attachment to an Activity or Fragment is done automatically.  If, however, you would
-     * like additional objects to subscribe to this Picker being set, attach Handlers here.
-     *
-     * @param handler an Object implementing the appropriate Picker Handler
-     * @return the current Builder object
-     */
-    @Deprecated
-    public NumberPickerBuilder addNumberPickerDialogHandler(NumberPickerDialogHandler handler) {
-        this.mNumberPickerDialogHandlers.add(handler);
-        return this;
-    }
-
     public NumberPickerBuilder addNumberPickerDialogHandler(NumberPickerDialogHandlerV2 handler) {
         this.mNumberPickerDialogHandlersV2.add(handler);
-        return this;
-    }
-
-    /**
-     * Remove objects previously added as handlers.
-     *
-     * @param handler the Object to remove
-     * @return the current Builder object
-     */
-    @Deprecated
-    public NumberPickerBuilder removeNumberPickerDialogHandler(NumberPickerDialogHandler handler) {
-        this.mNumberPickerDialogHandlers.remove(handler);
         return this;
     }
 
@@ -231,11 +192,10 @@ public class NumberPickerBuilder {
         }
         FragmentTransaction ft = manager.beginTransaction();
         final Fragment prev = manager.findFragmentByTag("number_dialog");
-        if (prev != null) {
-            ft.remove(prev).commit();
-            ft = manager.beginTransaction();
+        if (prev != null){
+            ft.remove(prev);
+            manager.executePendingTransactions();
         }
-        ft.addToBackStack(null);
 
         final NumberPickerDialogFragment fragment = NumberPickerDialogFragment
                 .newInstance(mReference, styleResId, minNumber, maxNumber, plusMinusVisibility, decimalVisibility,
@@ -243,9 +203,8 @@ public class NumberPickerBuilder {
         if (targetFragment != null) {
             fragment.setTargetFragment(targetFragment, 0);
         }
-        fragment.setNumberPickerDialogHandlers(mNumberPickerDialogHandlers);
         fragment.setNumberPickerDialogHandlersV2(mNumberPickerDialogHandlersV2);
-        ft.add(fragment,"number_dialog");
-        ft.commitAllowingStateLoss();
+        ft.add(fragment, "number_dialog");
+        ft.commitNowAllowingStateLoss();
     }
 }

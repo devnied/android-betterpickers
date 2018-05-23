@@ -51,7 +51,7 @@ public class SampleNumberDoubleListAdapter extends BaseSampleActivity {
             mNumbers = new ArrayList<BigDecimal>();
             mNumbers.add(new BigDecimal("150"));
             mNumbers.add(new BigDecimal("-150"));
-            mNumbers.add(new BigDecimal("150.65"));
+            mNumbers.add(new BigDecimal("150.123456789123456789"));
             mNumbers.add(new BigDecimal("-150.65"));
             mNumbers.add(new BigDecimal("0.65"));
             mNumbers.add(new BigDecimal("-0.65"));

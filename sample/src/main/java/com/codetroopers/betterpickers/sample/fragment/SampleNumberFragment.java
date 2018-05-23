@@ -36,7 +36,7 @@ public class SampleNumberFragment extends Fragment
             @Override
             public void onClick(View v) {
                 NumberPickerBuilder npb = new NumberPickerBuilder()
-                        .setFragmentManager(getChildFragmentManager())
+                        .setFragmentManager(getFragmentManager())
                         .setStyleResId(R.style.BetterPickersDialogFragment)
                         .setTargetFragment(SampleNumberFragment.this);
                 npb.show();
